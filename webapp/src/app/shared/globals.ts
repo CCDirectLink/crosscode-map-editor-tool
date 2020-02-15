@@ -7,7 +7,6 @@ import {AutotileService} from '../services/autotile/autotile.service';
 import {EntityRegistryService} from './phaser/entities/registry/entity-registry.service';
 
 export class Globals {
-	static isElectron = false;
 	static game: Phaser.Game;
 	static scene: Phaser.Scene;
 	static map: CCMap;
