@@ -38,7 +38,7 @@
 		"start:aot": "ng serve --aot",
 		"startNoLiveReload": "ng serve --live-reload false",
 		"build": "ng build",
-		"build:prod": "ng build --prod --no-progress",
+		"build:prod": "ng build --prod",
 		"test": "ng test",
 		"lint": "ng lint",
 		"dist": "npm run build:prod"
