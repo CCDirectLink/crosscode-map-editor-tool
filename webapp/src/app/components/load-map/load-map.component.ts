@@ -4,6 +4,7 @@ import {MatSidenav, MatTreeNestedDataSource} from '@angular/material';
 import {MapLoaderService} from '../../shared/map-loader.service';
 import {MapNode, MapNodeRoot} from './mapNode.model';
 import {VirtualMapNode} from './virtualMapNode.model';
+import { ToolLauncherAPIService } from '../../services/tool-launcher-api.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class LoadMapComponent {
 	
 	constructor(
 		private mapLoader: MapLoaderService,
+		private toolLauncher: ToolLauncherAPIService,
 	) {
 		this.mapsSource.data = [];
 		this.refresh();
@@ -44,6 +46,7 @@ export class LoadMapComponent {
 	
 	refresh() {
 		this.loading = false;
+		this.toolLauncher.getMaps();
 		/*this.http.getMaps().subscribe(paths => {
 			this.loading = false;
 			this.displayMaps(paths);
