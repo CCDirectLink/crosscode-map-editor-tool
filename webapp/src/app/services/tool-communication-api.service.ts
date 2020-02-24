@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class ToolLauncherAPIService {
+export class ToolCommunicationAPIService {
 
   constructor() { 
     // @ts-ignore
-    console.log(window.TOOL_LAUNCHER);
+    console.log(window.toolsApi);
   }
 
   getMaps() {
