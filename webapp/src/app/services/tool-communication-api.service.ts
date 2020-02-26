@@ -4,10 +4,11 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ToolCommunicationAPIService {
-
+  public devModLoader: any;
   constructor() { 
     // @ts-ignore
-    console.log(window.toolsApi);
+    console.log(window.DevModLoader);
+    this.devModLoader = null;
   }
 
   getMaps() {

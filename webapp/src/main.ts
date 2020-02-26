@@ -10,4 +10,8 @@ if (environment.production) {
 	enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+(window as any).importOfflineScripts().then(({DevModLoader} : any) => {
+	(window as any).DevModLoader = new DevModLoader;
+	platformBrowserDynamic().bootstrapModule(AppModule);
+});
+
