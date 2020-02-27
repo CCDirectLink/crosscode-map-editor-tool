@@ -46,12 +46,11 @@ export class LoadMapComponent {
 	
 	refresh() {
 		this.loading = false;
-		this.toolCommunicationApi.getMaps();
-		/*this.http.getMaps().subscribe(paths => {
+		this.toolCommunicationApi.getMaps().subscribe(paths => {
 			this.loading = false;
 			this.displayMaps(paths);
 			this.update();
-		});*/
+		});
 	}
 	
 	update() {
