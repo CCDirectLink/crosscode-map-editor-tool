@@ -42,22 +42,29 @@ export class LoadMapComponent {
 		// split by .
 		const parts = nodePath.split('.');
 
-		let bestRoot: MapNode = this.rootCopy;
-		let root: MapNode = bestRoot;
+		let roots: MapNode[] = [];
+		let root: MapNode = this.rootCopy;;
 		
 		for (const part of parts) {
 			if (root.children === null) {
+				roots.pop();
 				break;
 			}
-			bestRoot = root;
 			const found = root.children.filter((e: MapNode) => e.name === part);
-			if (found) {
+			if (found.length) {	
 				root = found[0];
+				roots.push(root);
 			} else {
 				break;
 			}
 		}
-		return bestRoot;
+
+		const bestRoot: MapNode| undefined = roots.pop();
+		if (bestRoot) {
+			return bestRoot;
+		}
+
+		return this.rootCopy;
 	}
 	
 	onFocusChange() {
