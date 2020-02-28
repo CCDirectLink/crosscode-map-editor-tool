@@ -13,11 +13,7 @@ export class ToolCommunicationAPIService {
   }
 
   getMaps(): Observable<MapContext[]>{
-    const samples: MapContext[] = [
-      {name: 'CrossCode', path: '', children: ['a.b']},
-      {name: 'mod1', path: '', children: ['a.b']}
-    ];
-    return this.toObservable<MapContext[]>(Promise.resolve(samples));
+    return this.toObservable<MapContext[]>(this.devModLoader.getAllMaps()); 
   }
 
   private toObservable<T>(promise: Promise<T>): Observable<T> {
