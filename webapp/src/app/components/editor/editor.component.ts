@@ -22,9 +22,4 @@ export class EditorComponent {
 	loadMapClicked() {
 		this.sidenavLoadMap.toggle();
 	}
-	
-	focusInput() {
-		// has to wait before sidenav renders the content
-		setTimeout(() => this.loadmap.focusInput(), 100);
-	}
 }
