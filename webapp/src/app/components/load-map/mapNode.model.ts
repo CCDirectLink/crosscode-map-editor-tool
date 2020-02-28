@@ -3,9 +3,11 @@
  */
 export interface MapNode {
 	name: string;
+	type: string;
 	displayed: boolean;
 	path?: string;
 	children: MapNode[] | null;
+	parent?: MapNode;
 }
 
 export interface MapNodeRoot extends MapNode {
