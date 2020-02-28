@@ -23,8 +23,8 @@ export class LoadMapComponent {
 	treeControl = new NestedTreeControl<VirtualMapNode>(node => node.children);
 	mapsSource = new MatTreeNestedDataSource<VirtualMapNode>();
 	
-	rootCopy: MapNodeRoot = {name: 'root', displayed: true, children: []}; // A copy of the root
-	root: MapNodeRoot = {name: 'root', displayed: true, children: []}; // The root itself is never displayed. It is used as a datasource for virtualRoot.
+	rootCopy: MapNodeRoot = {name: 'root', type: 'root', displayed: true, children: []}; // A copy of the root
+	root: MapNodeRoot = {name: 'root', type: 'root',  displayed: true, children: []}; // The root itself is never displayed. It is used as a datasource for virtualRoot.
 	virtualRoot = new VirtualMapNode(this.root); // To reuse the children filtering.
 	filter = '';
 
@@ -102,8 +102,9 @@ export class LoadMapComponent {
 		this.mapLoader.loadMap(event);
 	}
 	
-	load(name: string) {
-		this.mapLoader.loadMapByName(name);
+	load(node: VirtualMapNode) {
+		console.log('Loading', node.absolutePath);
+		// this.mapLoader.loadMapByName(name);
 	}
 	
 	hasChild(_: number, node: VirtualMapNode) {
@@ -122,6 +123,7 @@ export class LoadMapComponent {
 		let lastNode;
 		let root: MapContextNode = {
 			name: '',
+			type: 'context-root',
 			path: '',
 			displayed: true,
 			children: []
@@ -130,6 +132,7 @@ export class LoadMapComponent {
 			root = {
 				name: context.name,
 				path: context.path,
+				type: 'context-root',
 				children: [],
 				displayed: true
 			};
@@ -137,10 +140,12 @@ export class LoadMapComponent {
 			lastPath = '';
 			lastNode = root.children;
 			for (const path of context.children) {
-				const node = this.resolve(root.children, path, lastNode, lastPath);
+				const res : any = this.resolve(root, root.children, path, lastNode, lastPath);
+				let node: MapNode[] = res[0];
+				let parent: MapNode = res[1];
 				const name = path.substr(path.lastIndexOf('.') + 1);
 				
-				node.push({name, path, children: null, displayed: true});
+				node.push({name, path, type: 'leaf', children: null, displayed: true, parent });
 				
 				lastPath = path;
 				lastNode = node;
@@ -151,16 +156,17 @@ export class LoadMapComponent {
 		this.rootCopy.children = data;
 	}
 	
-	private resolve(data: MapNode[], path: string, lastNode: MapNode[], lastPath: string): MapNode[] {
+	private resolve(parentNode: MapNode, data: MapNode[], path: string, lastNode: MapNode[], lastPath: string): [MapNode[], MapNode] {
 		if (path.substr(0, path.lastIndexOf('.')) === lastPath.substr(0, lastPath.lastIndexOf('.'))) {
-			return lastNode;
+			return [lastNode, parentNode];
 		}
 		
 		if (!path.includes('.')) {
-			return data;
+			return [data, parentNode];
 		}
 		
 
+		let parent = parentNode;
 		let node = data;
 		const parts = path
 			.substr(0, path.lastIndexOf('.'))
@@ -171,16 +177,19 @@ export class LoadMapComponent {
 				node = child.children;
 			} else {
 				const children: MapNode[] = [];
-				const newNode: MapNode = {
+				const newNode: MapNodeRoot = {
 					name: name,
 					children: children,
+					type: 'root',
 					displayed: true,
+					parent
 				};
 				node.push(newNode);
+				parent = newNode;
 				node = children;
 			}
 		}
-		return node;
+		return [node, parent];
 	}
 	
 	private filterNode(node: MapNode, filter: string): boolean {
