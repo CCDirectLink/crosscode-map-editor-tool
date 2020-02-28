@@ -35,6 +35,28 @@ export class VirtualMapNode {
             .map(n => this.resolve(n));
     }
 
+    public get absolutePath(): string {
+        let currentPath = '';
+        let node: MapNode | null = this.original;
+        do {
+            if (node) {
+                if (node.type === 'root') {
+                    currentPath = node.name + '/' + currentPath;
+                } else if (node.type === 'leaf') {
+                    currentPath += node.name + '.json';
+                } else if (node.type === 'context-root') {
+                    currentPath = node.path + currentPath;
+                }
+                node = node.parent || null;
+            } else {
+                node = null;
+            }
+            
+        } while(node !== null);
+ 
+        return currentPath;
+    }
+
     private resolve(node: MapNode): VirtualMapNode {
         const known = this.knownChildren.get(node);
         if (known) {
