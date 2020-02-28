@@ -5,9 +5,6 @@
 				<span class="mat-headline">Load map</span>
 			</div>
 			<div fxFlex fxLayoutAlign="end">
-				<button mat-icon-button (click)="fileUpload.click()">
-					<mat-icon>open_in_new</mat-icon>
-				</button>
 				<button mat-icon-button (click)="refresh()">
 					<mat-icon>refresh</mat-icon>
 				</button>
@@ -22,7 +19,6 @@
 				<input #filterInput matInput type="text" placeholder="Filter" [(ngModel)]="filter" (ngModelChange)="update()"/>
 			</mat-form-field>
 		</div>
-		<input #fileUpload type="file" class="hidden" (change)="loadMap($event)" accept=".json"/>
 	</div>
 	<div fxFlex class="map-list dark-scrollbar">
 		<mat-tree *ngIf="!loading; else loader" [dataSource]="mapsSource" [treeControl]="treeControl" class="mapTree">
