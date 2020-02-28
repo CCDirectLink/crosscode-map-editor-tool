@@ -2,7 +2,8 @@ import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatSidenav, MatTreeNestedDataSource} from '@angular/material';
 import {MapLoaderService} from '../../shared/map-loader.service';
-import {MapNode, MapNodeRoot} from './mapNode.model';
+import {MapNode, MapNodeRoot, MapContextNode} from './mapNode.model';
+import {MapContext} from './mapContext.model';
 import {VirtualMapNode} from './virtualMapNode.model';
 import { ToolCommunicationAPIService } from '../../services/tool-communication-api.service';
 
@@ -46,9 +47,9 @@ export class LoadMapComponent {
 	
 	refresh() {
 		this.loading = false;
-		this.toolCommunicationApi.getMaps().subscribe(paths => {
+		this.toolCommunicationApi.getMaps().subscribe(contexts => {
 			this.loading = false;
-			this.displayMaps(paths);
+			this.displayMaps(contexts);
 			this.update();
 		});
 	}
@@ -78,21 +79,39 @@ export class LoadMapComponent {
 		return this.sidenav.close();
 	}
 	
-	private displayMaps(paths: string[]) {
+	private displayMaps(contexts: MapContext[]) {
+
 		const data: MapNode[] = [];
 		
 		let lastPath = '';
-		let lastNode = data;
-		for (const path of paths) {
-			const node = this.resolve(data, path, lastNode, lastPath);
-			const name = path.substr(path.lastIndexOf('.') + 1);
-			
-			node.push({name, path, displayed: true});
-			
-			lastPath = path;
-			lastNode = node;
+		let lastNode;
+		let root: MapContextNode = {
+			name: '',
+			path: '',
+			displayed: true,
+			children: []
+		};
+		for (const context of contexts) {
+			root = {
+				name: context.name,
+				path: context.path,
+				children: [],
+				displayed: true
+			};
+
+			lastPath = '';
+			lastNode = root.children;
+			for (const path of context.children) {
+				const node = this.resolve(root.children, path, lastNode, lastPath);
+				const name = path.substr(path.lastIndexOf('.') + 1);
+				
+				node.push({name, path, displayed: true});
+				
+				lastPath = path;
+				lastNode = node;
+			}
+			data.push(root);
 		}
-		
 		this.root.children = data;
 	}
 	
@@ -105,8 +124,8 @@ export class LoadMapComponent {
 			return data;
 		}
 		
+
 		let node = data;
-		
 		const parts = path
 			.substr(0, path.lastIndexOf('.'))
 			.split('.');

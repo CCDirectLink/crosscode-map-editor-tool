@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
+import { MapContext } from '../components/load-map/mapContext.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,12 @@ export class ToolCommunicationAPIService {
     this.devModLoader.init();
   }
 
-  getMaps(): Observable<string[]>{
-    return this.toObservable<string[]>(Promise.resolve(["a.b"]));
+  getMaps(): Observable<MapContext[]>{
+    const samples: MapContext[] = [
+      {name: 'CrossCode', path: '', children: ['a.b']},
+      {name: 'mod1', path: '', children: ['a.b']}
+    ];
+    return this.toObservable<MapContext[]>(Promise.resolve(samples));
   }
 
   private toObservable<T>(promise: Promise<T>): Observable<T> {
