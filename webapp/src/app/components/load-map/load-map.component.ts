@@ -15,23 +15,20 @@ import { ToolCommunicationAPIService } from '../../services/tool-communication-a
 })
 export class LoadMapComponent {
 	
-	@ViewChild('fileUpload', {static: true})
-	fileUpload!: ElementRef<HTMLInputElement>;
-	
-	@ViewChild('filterInput', {static: true})
-	filterInput!: ElementRef<HTMLInputElement>;
-	
 	@Input()
 	sidenav!: MatSidenav;
 	
 	loading = false;
-	
+
 	treeControl = new NestedTreeControl<VirtualMapNode>(node => node.children);
 	mapsSource = new MatTreeNestedDataSource<VirtualMapNode>();
 	
+	rootCopy: MapNodeRoot = {name: 'root', displayed: true, children: []}; // A copy of the root
 	root: MapNodeRoot = {name: 'root', displayed: true, children: []}; // The root itself is never displayed. It is used as a datasource for virtualRoot.
 	virtualRoot = new VirtualMapNode(this.root); // To reuse the children filtering.
 	filter = '';
+
+	focusPath: string = '';
 	
 	constructor(
 		private mapLoader: MapLoaderService,
@@ -40,9 +37,41 @@ export class LoadMapComponent {
 		this.mapsSource.data = [];
 		this.refresh();
 	}
+
+	findNode(nodePath: string) : MapNode {
+		// split by .
+		const parts = nodePath.split('.');
+
+		let bestRoot: MapNode = this.rootCopy;
+		let root: MapNode = bestRoot;
+		
+		for (const part of parts) {
+			if (root.children === null) {
+				break;
+			}
+			bestRoot = root;
+			const found = root.children.filter((e: MapNode) => e.name === part);
+			if (found) {
+				root = found[0];
+			} else {
+				break;
+			}
+		}
+		return bestRoot;
+	}
 	
-	focusInput() {
-		this.filterInput.nativeElement.focus();
+	onFocusChange() {
+		
+		// from root copy
+		// find path
+		let newNode: MapNode = this.findNode(this.focusPath);
+
+		if (newNode.children) {
+			this.root.children = newNode.children;
+		} else {
+			this.root.children = [];
+		}
+		this.update();	
 	}
 	
 	refresh() {
@@ -64,7 +93,6 @@ export class LoadMapComponent {
 	
 	loadMap(event: Event) {
 		this.mapLoader.loadMap(event);
-		this.fileUpload.nativeElement.value = '';
 	}
 	
 	load(name: string) {
@@ -105,7 +133,7 @@ export class LoadMapComponent {
 				const node = this.resolve(root.children, path, lastNode, lastPath);
 				const name = path.substr(path.lastIndexOf('.') + 1);
 				
-				node.push({name, path, displayed: true});
+				node.push({name, path, children: null, displayed: true});
 				
 				lastPath = path;
 				lastNode = node;
@@ -113,6 +141,7 @@ export class LoadMapComponent {
 			data.push(root);
 		}
 		this.root.children = data;
+		this.rootCopy.children = data;
 	}
 	
 	private resolve(data: MapNode[], path: string, lastNode: MapNode[], lastPath: string): MapNode[] {

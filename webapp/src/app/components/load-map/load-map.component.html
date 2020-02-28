@@ -16,7 +16,7 @@
 
 		<div class="filter" fxLayout="column">
 			<mat-form-field>
-				<input #filterInput matInput type="text" placeholder="Filter" [(ngModel)]="filter" (ngModelChange)="update()"/>
+				<input #focus matInput type="text" placeholder="Focus" [(ngModel)]="focusPath" (ngModelChange)="onFocusChange()" />
 			</mat-form-field>
 		</div>
 	</div>
