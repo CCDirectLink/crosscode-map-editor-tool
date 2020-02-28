@@ -10,7 +10,6 @@ export class ToolCommunicationAPIService {
   constructor() { 
     // @ts-ignore
     this.devModLoader = window.DevModLoader;
-    this.devModLoader.init();
   }
 
   getMaps(): Observable<MapContext[]>{

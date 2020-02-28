@@ -11,7 +11,11 @@ if (environment.production) {
 }
 
 (window as any).importOfflineScripts().then(({DevModLoader} : any) => {
-	(window as any).DevModLoader = new DevModLoader;
-	platformBrowserDynamic().bootstrapModule(AppModule);
+	const devModLoader = new DevModLoader;
+	(window as any).DevModLoader = devModLoader;
+	devModLoader.init().then(() => {
+		platformBrowserDynamic().bootstrapModule(AppModule);
+	});
+	
 });
 
