@@ -86,14 +86,11 @@ export class LoadMapComponent {
 		this.toolCommunicationApi.getMaps().subscribe(contexts => {
 			this.loading = false;
 			this.displayMaps(contexts);
-			this.update();
+			this.onFocusChange();
 		});
 	}
 	
 	update() {
-		for (const node of this.root.children) {
-			this.filterNode(node, this.filter);
-		}
 		this.mapsSource.data = [];
 		this.mapsSource.data = this.virtualRoot.children || [];
 	}
