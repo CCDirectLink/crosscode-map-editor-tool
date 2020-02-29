@@ -176,6 +176,7 @@ export class LoadMapComponent {
 		for (const name of parts) {
 			const child = node.find(n => n.name === name);
 			if (child && child.children) {
+				parent = child;
 				node = child.children;
 			} else {
 				const children: MapNode[] = [];
