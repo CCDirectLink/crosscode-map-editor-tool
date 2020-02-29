@@ -1,5 +1,5 @@
 {
     "name": "CrossCode Map Editor",
-    "htmlMain": "webapp/dist/index.html",
+    "htmlMain": "webapp/distAngular/index.html",
     "devMain": "http://localhost:4200/"
 }
