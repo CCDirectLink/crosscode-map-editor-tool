@@ -72,6 +72,13 @@ export class ToolbarComponent implements OnInit {
 		});
 	}
 	
+	sendMapToCrossCode() {
+		const toolsApi = (window as any).ToolsApi;
+		if (this.map) {
+			toolsApi.Communication.Api.emit('map', new toolsApi.Communication.Message('update', this.map.exportMap(), null))
+		}
+	}
+
 	openMapSettings() {
 		this.overlayService.open(MapSettingsComponent, {
 			positionStrategy: this.overlay.position().global()

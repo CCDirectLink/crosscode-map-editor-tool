@@ -28,6 +28,7 @@
 	</div>
 	<div fxFlex fxLayoutAlign="end">
 		<div>
+			<button *ngIf="map" mat-button (click)="sendMapToCrossCode()">Send to CrossCode</button>
 			<button *ngIf="map" mat-button (click)="openMapSettings()">Map Settings</button>
 			<button *ngIf="loaded; else loader" mat-button (click)="newMap()">New Map</button>
 			<ng-template #loader>
