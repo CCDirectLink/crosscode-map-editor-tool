@@ -5,6 +5,12 @@ import Scene = Phaser.Scene;
 
 export class Helper {
 	
+	static loader : any;
+
+	public static setLoader(loader: any) {
+		Helper.loader = loader;
+	}
+
 	public static worldToTile(x: number, y: number): Point {
 		const p: Point = {x: 0, y: 0};
 		
@@ -65,19 +71,28 @@ export class Helper {
 	public static copy(obj: any) {
 		return JSON.parse(JSON.stringify(obj));
 	}
+
+	public static async getJSONPatched(key: string, callback: (json: any) => void) {
+		const scene = Globals.scene;
+		const jsonData = scene.cache.json.get(key);
+		await Helper.loader.patchJSON(jsonData, key + '.json');
+		callback(jsonData);
+	}
 	
 	public static getJson(key: string, callback: (json: any) => void) {
 		const scene = Globals.scene;
 		
 		// get json from cache
 		if (scene.cache.json.has(key)) {
-			return callback(scene.cache.json.get(key));
+			return Helper.getJSONPatched(key, callback);
 		}
 		
+		const jsonPath = Helper.loader.getAssetsOverride(key + '.json', true);
+
 		// load json
-		scene.load.json(key, Globals.URL + key + '.json');
+		scene.load.json(key, jsonPath);
 		scene.load.once('complete', () => {
-			return callback(scene.cache.json.get(key));
+			Helper.getJSONPatched(key, callback);
 		});
 		scene.load.start();
 	}
@@ -100,9 +115,11 @@ export class Helper {
 		if (scene.textures.exists(key)) {
 			return true;
 		}
-		
+		const texturePath = Helper.loader.getAssetsOverride(key, true);
+
+		console.log('Texture key', key);
 		return new Promise(res => {
-			scene.load.image(key, Globals.URL + key);
+			scene.load.image(key, texturePath);
 			scene.load.once('complete', () => res(true));
 			scene.load.once('loaderror', () => res(false));
 			scene.load.start();

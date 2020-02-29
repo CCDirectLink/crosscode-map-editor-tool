@@ -103,8 +103,7 @@ export class LoadMapComponent {
 	}
 	
 	load(node: VirtualMapNode) {
-		console.log('Loading', node.absolutePath);
-		// this.mapLoader.loadMapByName(name);
+		this.mapLoader.loadMapByPath(node.absolutePath);
 	}
 	
 	hasChild(_: number, node: VirtualMapNode) {
@@ -156,9 +155,15 @@ export class LoadMapComponent {
 		this.rootCopy.children = data;
 	}
 	
-	private resolve(parentNode: MapNode, data: MapNode[], path: string, lastNode: MapNode[], lastPath: string): [MapNode[], MapNode] {
+	private resolve(parentNode: MapNode, data: MapNode[], path: string, lastNode: MapNode[], lastPath: string): [MapNode[], MapNode| null] {
 		if (path.substr(0, path.lastIndexOf('.')) === lastPath.substr(0, lastPath.lastIndexOf('.'))) {
-			return [lastNode, parentNode];
+			const lastAddedNode = lastNode[lastNode.length - 1];
+			if (lastAddedNode.parent) {
+				return [lastNode, lastAddedNode.parent];
+			} else {
+				return [lastNode, null];
+			}
+			
 		}
 		
 		if (!path.includes('.')) {

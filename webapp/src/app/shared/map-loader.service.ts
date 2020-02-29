@@ -4,8 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {CrossCodeMap} from '../models/cross-code-map';
 import {CCMap} from './phaser/tilemap/cc-map';
 import {CCMapLayer} from './phaser/tilemap/cc-map-layer';
-import {Globals} from './globals';
-import {BasePath, FileExtension, PathResolver} from './path-resolver';
+import { ToolCommunicationAPIService } from '../services/tool-communication-api.service';
 
 @Injectable()
 export class MapLoaderService {
@@ -16,6 +15,7 @@ export class MapLoaderService {
 	
 	constructor(
 		private snackBar: MatSnackBar,
+		private toolApi: ToolCommunicationAPIService,
 	) {
 	}
 	
@@ -54,12 +54,10 @@ export class MapLoaderService {
 		this._map.next(map);
 	}
 	
-	loadMapByName(name: string) {
-		/*const path = PathResolver.convertToPath(BasePath.MAPS, name, FileExtension.JSON);
-		
-		this.http.getAssetsFile<CrossCodeMap>(path).subscribe(map => {
+	loadMapByPath(path: string) {
+		this.toolApi.loadJSON(path).subscribe((map: CrossCodeMap) => {
 			this.loadRawMap(map, name, path);
-		});*/
+		});
 	}
 	
 	get map(): Observable<CrossCodeMap> {
