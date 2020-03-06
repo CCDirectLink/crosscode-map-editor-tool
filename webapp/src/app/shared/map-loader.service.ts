@@ -56,7 +56,8 @@ export class MapLoaderService {
 	
 	loadMapByPath(path: string) {
 		this.toolApi.loadJSON(path).subscribe((map: CrossCodeMap) => {
-			this.loadRawMap(map, name, path);
+			map.path = path;
+			this._map.next(map);
 		});
 	}
 	

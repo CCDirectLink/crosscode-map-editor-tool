@@ -4,6 +4,7 @@ import {MatSnackBar} from '@angular/material';
 import {Helper} from '../shared/phaser/helper';
 import {EventManager} from '@angular/platform-browser';
 import {MapLoaderService} from '../shared/map-loader.service';
+import { ToolCommunicationAPIService } from './tool-communication-api.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,7 +14,8 @@ export class SaveService {
 	constructor(
 		private snackbar: MatSnackBar,
 		mapLoader: MapLoaderService,
-		eventManager: EventManager
+		eventManager: EventManager,
+		private toolsApi: ToolCommunicationAPIService
 	) {
 		eventManager.addEventListener(document as any, 'keydown', (event: KeyboardEvent) => {
 			if (Helper.isInputFocused()) {
@@ -27,7 +29,7 @@ export class SaveService {
 					return;
 				}
 				if (event.shiftKey) {
-					this.saveMapAs(map);
+					// this.saveMapAs(map);
 				} else {
 					this.saveMap(map);
 				}
@@ -38,17 +40,12 @@ export class SaveService {
 	saveMap(map: CCMap) {
 		if (!map.path) {
 			console.error('map has no path :/');
-			return this.saveMapAs(map);
+			return;
 		}
 
+		this.toolsApi.save(map.path, this.generateMapJson(map));
 	}
-	
-	saveMapAs(map: CCMap) {
-		/**
-		 * 
-		 */
-	}
-	
+
 	private generateMapJson(map: CCMap) {
 		const out = map.exportMap();
 		out.path = undefined;

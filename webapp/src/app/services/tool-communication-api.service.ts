@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import { MapContext } from '../components/load-map/mapContext.model';
 import { CrossCodeMap } from '../models/cross-code-map';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,6 @@ export class ToolCommunicationAPIService {
   constructor() { 
     // @ts-ignore
     this.devModLoader = window.DevModLoader;
-
-    this.devModLoader.setBaseURL('http://localhost:8080/assets/');
-    
   }
 
   getMaps(): Observable<MapContext[]>{
@@ -30,6 +28,10 @@ export class ToolCommunicationAPIService {
 
   getAssetsOverride(path: string) {
     return this.devModLoader.getAssetPathOveride(path, false);
+  }
+
+  save(path: string, data: any) {
+    return this.toObservable<boolean>(this.devModLoader.save('assets/' + path, data));
   }
 
   private toObservable<T>(promise: Promise<T>): Observable<T> {

@@ -10,12 +10,14 @@ if (environment.production) {
 	enableProdMode();
 }
 
-(window as any).importOfflineScripts().then(({DevModLoader} : any) => {
-	const devModLoader = new DevModLoader;
-	(window as any).DevModLoader = devModLoader;
-	devModLoader.init().then(() => {
-		platformBrowserDynamic().bootstrapModule(AppModule);
-	});
-	
-});
+window.addEventListener('INJECTION_DONE', async function({detail}: any) {
 
+	const baseUrl = detail.baseUrl;
+	//@ts-ignore
+	const devModLoader = window.DevModLoader = new DevModLoader;
+	//@ts-ignore
+	devModLoader.setBaseURL(baseUrl);
+	//@ts-ignore
+	await devModLoader.init();
+	platformBrowserDynamic().bootstrapModule(AppModule);
+});
