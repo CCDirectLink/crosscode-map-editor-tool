@@ -32,6 +32,9 @@
 			]
 		}
 	},
+	"browserslist" : [
+		"> 5%"
+	],
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
