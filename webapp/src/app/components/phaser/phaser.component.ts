@@ -46,10 +46,11 @@ export class PhaserComponent implements OnInit {
 			width: window.innerWidth * window.devicePixelRatio,
 			height: window.innerHeight * window.devicePixelRatio - 64,
 			type: Phaser.AUTO,
-			parent: 'content',
 			scale: {
-				mode: Phaser.Scale.ScaleModes.NONE,
-				zoom: 1 / window.devicePixelRatio
+				parent: 'content',
+				mode:  Phaser.Scale.NONE,
+				zoom: 1 / window.devicePixelRatio,
+				autoCenter: Phaser.Scale.CENTER_BOTH,
 			},
 			render: {
 				pixelArt: true
