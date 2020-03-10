@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef,HostListener, OnInit} from '@angular/core';
 import {MapLoaderService} from '../../shared/map-loader.service';
 import {GlobalEventsService} from '../../shared/global-events.service';
 import {Globals} from '../../shared/globals';
@@ -42,15 +42,15 @@ export class PhaserComponent implements OnInit {
 	ngOnInit() {
 		this.heightMap.init();
 		const scene = new MainScene();
+		const scale = this.getScale();
 		Globals.game = new Phaser.Game({
-			width: window.innerWidth * window.devicePixelRatio,
-			height: window.innerHeight * window.devicePixelRatio - 64,
 			type: Phaser.AUTO,
+			parent: 'content',
+			width: scale.width,
+			height: scale.height,
 			scale: {
-				parent: 'content',
-				mode:  Phaser.Scale.NONE,
-				zoom: 1 / window.devicePixelRatio,
-				autoCenter: Phaser.Scale.CENTER_BOTH,
+				mode: Phaser.Scale.ScaleModes.NONE,
+				zoom: 1 / window.devicePixelRatio
 			},
 			render: {
 				pixelArt: true
@@ -59,5 +59,23 @@ export class PhaserComponent implements OnInit {
 			scene: [scene]
 		});
 		Globals.scene = scene;
+	}
+
+	@HostListener('window:resize', ['$event'])
+	onResize(event: Event) {
+		if (!Globals.game) {
+			return;
+		}
+		const scale = this.getScale();
+		const width = scale.width;
+		const height = scale.height;
+		Globals.game.scale.resize(width, height);
+	}
+
+	private getScale() {
+		return {
+			width: window.innerWidth * window.devicePixelRatio,
+			height: window.innerHeight * window.devicePixelRatio - 64
+		};
 	}
 }
