@@ -4,10 +4,10 @@
 	<div fxFlex fxLayoutAlign="start">
 		<button mat-button [matMenuTriggerFor]="file">File</button>
 		<mat-menu #file="matMenu">
-			<button [disabled]="!loaded" mat-menu-item (click)="newMap()">New Map</button>
-			<button mat-menu-item *ngIf="loaded" (click)="loadMapClicked.emit()">Load Map</button>
-			<button [disabled]="!map" mat-menu-item (click)="saveMap(false)">Save Map (Ctrl + S)</button>
-			<button [disabled]="!map" mat-menu-item (click)="saveMap(true)">Save Map as... (Ctrl + Shift + S)</button>
+			<button [disabled]="!loaded" mat-menu-item (click)="newMap()">New</button>
+			<button mat-menu-item *ngIf="loaded" (click)="loadMapClicked.emit()">Load</button>
+			<button [disabled]="!map" mat-menu-item (click)="saveMap(false)">Save (Ctrl + S)</button>
+			<button [disabled]="!map" mat-menu-item (click)="saveMap(true)">Save as... (Ctrl + Shift + S)</button>
 		</mat-menu>
 		
 		<button mat-button [matMenuTriggerFor]="menu">Edit</button>
