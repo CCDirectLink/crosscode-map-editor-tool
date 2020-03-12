@@ -4,6 +4,7 @@
 	<div fxFlex fxLayoutAlign="start">
 		<button mat-button [matMenuTriggerFor]="file">File</button>
 		<mat-menu #file="matMenu">
+			<button [disabled]="!loaded" mat-menu-item (click)="newMap()">New Map</button>
 			<button mat-menu-item *ngIf="loaded" (click)="loadMapClicked.emit()">Load Map</button>
 			<button [disabled]="!map" mat-menu-item (click)="saveMap(false)">Save Map (Ctrl + S)</button>
 			<button [disabled]="!map" mat-menu-item (click)="saveMap(true)">Save Map as... (Ctrl + Shift + S)</button>
@@ -30,7 +31,7 @@
 		<div>
 			<button *ngIf="map" mat-button (click)="sendMapToCrossCode()">Send to CrossCode</button>
 			<button *ngIf="map" mat-button (click)="openMapSettings()">Map Settings</button>
-			<button *ngIf="loaded; else loader" mat-button (click)="newMap()">New Map</button>
+			<span *ngIf="loaded; else loader"></span>
 			<ng-template #loader>
 				<span class="load-error">{{error}}</span>
 				<mat-spinner *ngIf="!error" [diameter]="40" [strokeWidth]="5"></mat-spinner>
