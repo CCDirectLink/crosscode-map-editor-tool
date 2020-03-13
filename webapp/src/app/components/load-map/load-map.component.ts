@@ -153,6 +153,10 @@ export class LoadMapComponent {
 	}
 	
 	private resolve(parentNode: MapNode, data: MapNode[], path: string, lastNode: MapNode[], lastPath: string): [MapNode[], MapNode| null] {
+		if (!path.includes('.')) {
+			return [data, parentNode];
+		} 
+
 		if (path.substr(0, path.lastIndexOf('.')) === lastPath.substr(0, lastPath.lastIndexOf('.'))) {
 			const lastAddedNode = lastNode[lastNode.length - 1];
 			if (lastAddedNode.parent) {
@@ -163,11 +167,6 @@ export class LoadMapComponent {
 			
 		}
 		
-		if (!path.includes('.')) {
-			return [data, parentNode];
-		}
-		
-
 		let parent = parentNode;
 		let node = data;
 		const parts = path
