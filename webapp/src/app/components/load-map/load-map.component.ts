@@ -67,6 +67,24 @@ export class LoadMapComponent {
 		return this.rootCopy;
 	}
 	
+	onRightClick(node: VirtualMapNode) {
+		const newNode = {
+			name: "Hi",
+			type: "root",
+			children: [],
+			displayed: true,
+			parent: undefined
+		};
+
+		node.addMapNode(newNode);
+
+		console.log(newNode);
+		
+		const oldData = this.mapsSource.data;
+		this.mapsSource.data = []
+		this.mapsSource.data = oldData
+	}
+
 	onFocusChange() {
 		
 		// from root copy

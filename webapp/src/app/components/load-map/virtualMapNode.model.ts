@@ -17,6 +17,22 @@ export class VirtualMapNode {
         }
     }
 
+    addMapNode(newNode: MapNode) {
+        const original = this.original;
+
+        newNode.parent = original;
+        
+        if (!original.children) {
+            original.children = [];
+        }
+
+        original.children.push(newNode);
+
+        const virtualNode = new VirtualMapNode(newNode);
+        this.knownChildren.set(newNode, virtualNode);
+        return virtualNode;
+    }
+
     public get name(): string {
         return this.original.name;
     }

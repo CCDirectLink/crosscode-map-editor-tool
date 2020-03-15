@@ -34,7 +34,7 @@
 
 			<mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
 				<li>
-					<button mat-button class="mapTree-button" matTreeNodeToggle>
+					<button (contextmenu)="onRightClick(node)" mat-button class="mapTree-button" matTreeNodeToggle>
 						<mat-icon class="icon mat-icon-rtl-mirror">
 							{{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
 						</mat-icon>
