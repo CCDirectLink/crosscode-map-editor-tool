@@ -131,7 +131,7 @@ export class MapFileSystemService {
 		return root;
 	}
 
-	get fs(): Observable<any> {
+	get fs(): Observable<MapFolder> {
 		return this._fs.asObservable();
 	}
 }
