@@ -14,4 +14,4 @@ export interface MapNodeRoot extends MapNode {
 	children: MapNode[];
 }
 
-export interface MapContextNode extends MapNodeRoot {}
+export interface MapContextNode extends MapNodeRoot { }

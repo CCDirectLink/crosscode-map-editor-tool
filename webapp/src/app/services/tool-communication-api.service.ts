@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
+import { Observable } from 'rxjs';
 import { MapContext } from '../components/load-map/mapContext.model';
 import { CrossCodeMap } from '../models/cross-code-map';
 import { environment } from '../../environments/environment';
@@ -9,13 +9,13 @@ import { environment } from '../../environments/environment';
 })
 export class ToolCommunicationAPIService {
   public devModLoader: any;
-  constructor() { 
+  constructor() {
     // @ts-ignore
     this.devModLoader = window.DevModLoader;
   }
 
-  getMaps(): Observable<MapContext[]>{
-    return this.toObservable<MapContext[]>(this.devModLoader.getAllMaps()); 
+  getMaps(): Observable<MapContext[]> {
+    return this.toObservable<MapContext[]>(this.devModLoader.getAllMaps());
   }
 
   loadJSON(jsonPath: string) {
@@ -35,11 +35,11 @@ export class ToolCommunicationAPIService {
   }
 
   private toObservable<T>(promise: Promise<T>): Observable<T> {
-		return new Observable<T>(subsriber => {
-			promise
-				.then(value => subsriber.next(value))
-				.catch(err => subsriber.error(err))
-				.finally(() => subsriber.complete());
-		});
-	}
+    return new Observable<T>(subsriber => {
+      promise
+        .then(value => subsriber.next(value))
+        .catch(err => subsriber.error(err))
+        .finally(() => subsriber.complete());
+    });
+  }
 }

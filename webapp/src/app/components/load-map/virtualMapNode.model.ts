@@ -6,7 +6,7 @@ import { MapNode } from './mapNode.model';
 export class VirtualMapNode {
     private original: MapNode;
     private knownChildren = new WeakMap<MapNode, VirtualMapNode>();
-    
+
     public constructor(original: MapNode) {
         this.original = original;
 
@@ -21,7 +21,7 @@ export class VirtualMapNode {
         const original = this.original;
 
         newNode.parent = original;
-        
+
         if (!original.children) {
             original.children = [];
         }
@@ -67,9 +67,9 @@ export class VirtualMapNode {
             } else {
                 node = null;
             }
-            
-        } while(node !== null);
- 
+
+        } while (node !== null);
+
         return currentPath;
     }
 
