@@ -1,6 +1,7 @@
 <div class="outer-container">
 	<mat-sidenav-container>
 		<mat-sidenav #sidenavLoadMap [autoFocus]="false">
+			<app-map-fs-tree-view #treeViewer [sidenav]="sidenavLoadMap"></app-map-fs-tree-view>
 		</mat-sidenav>
 		<mat-sidenav-content>
 			<app-toolbar (loadMapClicked)="loadMapClicked()"></app-toolbar>
