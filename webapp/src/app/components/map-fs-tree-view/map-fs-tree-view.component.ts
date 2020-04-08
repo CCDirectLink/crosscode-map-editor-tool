@@ -21,4 +21,12 @@ export class MapFsTreeViewComponent implements OnInit {
         );
     }
 
+    refresh() {
+        this.mapFsService.refresh();
+    }
+
+    close() {
+        return this.sidenav.close();
+    }
+
 }
