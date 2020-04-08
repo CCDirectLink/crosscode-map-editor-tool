@@ -1,0 +1,30 @@
+@import "~@angular/material/theming";
+
+$config: mat-typography-config();
+
+.mapTree ul,
+.mapTree li {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-left: 16px;
+	list-style-type: none;
+}
+
+.mapTree-button {
+	text-align: left;
+	text-transform: none;
+	width: 100%;
+	min-height: 48px;
+}
+
+.sidenav {
+	height: 100%;
+}
+
+.map-list {
+	overflow-y: auto;
+}
+
+.hidden {
+	display: none;
+}
