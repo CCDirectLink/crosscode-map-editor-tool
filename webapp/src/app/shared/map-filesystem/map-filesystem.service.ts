@@ -36,6 +36,7 @@ export class MapFileSystemService {
 
 	init(maps: any) {
 		this.root.clear();
+		this.root.isRoot = true;
 		for (const map of maps) {
 
 			const mapFolder: IMapFile = {
@@ -50,7 +51,8 @@ export class MapFileSystemService {
 
 			const parent: MapFolder = this.root.addChildFolder(mapFolder);
 
-
+			parent.isRoot = true;
+			parent.setRelativePath();
 			for (const childPath of map.children) {
 				const pathParts = childPath.split('/');
 				let subParent: MapFolder = parent;
@@ -71,6 +73,7 @@ export class MapFileSystemService {
 							};
 						}
 						subParent = subCacheFolder[pathPart].value;
+						subParent.setRelativePath();
 						subCacheFolder = subCacheFolder[pathPart].children;
 					} else if (pathPart.length) {
 						let fileName: string = pathPart;
@@ -80,11 +83,12 @@ export class MapFileSystemService {
 
 						fileName = fileName.substring(0, fileName.length - 5);
 
-						subParent.addChildFile({
+						const leafFile = subParent.addChildFile({
 							type: MapFileType.FILE,
 							name: fileName,
 							path: pathPart
-						})
+						});
+						leafFile.setRelativePath();
 					}
 
 				}

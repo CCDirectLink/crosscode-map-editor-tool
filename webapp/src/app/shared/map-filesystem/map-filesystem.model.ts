@@ -13,7 +13,9 @@ export class MapFile {
     private details: IMapFile;
     private _parent: MapFile | null = null;
     private fullPath: string = '';
+    private _root = false;
 
+    private _relPath = '';
     constructor(_details: IMapFile, parent: MapFolder | null) {
         this.details = _details;
         this.setParent(parent);
@@ -27,6 +29,30 @@ export class MapFile {
         } else {
             this.fullPath = this.path;
         }
+    }
+
+    setRelativePath() {
+        if (!this.isRoot) {
+            let paths = [];
+            let parentFile;
+            let currentFile: MapFile = this;
+            do {
+                parentFile = currentFile.parent;
+                paths.push(currentFile.name);
+                if (parentFile) {
+                    currentFile = parentFile;
+                }
+            } while (parentFile && !parentFile.isRoot);
+            this._relPath = paths.reverse().join('/');
+        }
+    }
+
+    set isRoot(value: boolean) {
+        this._root = value;
+    }
+
+    get isRoot() {
+        return this._root;
     }
 
     get name() {
@@ -44,6 +70,10 @@ export class MapFile {
 
     get absolutePath() {
         return this.fullPath;
+    }
+
+    get relativePath() {
+        return this._relPath;
     }
 
     get path() {
