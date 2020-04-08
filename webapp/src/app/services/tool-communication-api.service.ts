@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MapContext } from '../components/load-map/mapContext.model';
+import { MapContext } from '../models/mapContext.model';
 
 
 @Injectable({
