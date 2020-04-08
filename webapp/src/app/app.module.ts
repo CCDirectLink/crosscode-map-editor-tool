@@ -24,6 +24,7 @@ import { TileSelectorComponent } from './components/tile-selector/tile-selector.
 import { RouterModule } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FolderSelectorComponent } from './components/dialogs/folder-selector/folder-selector.component';
+import { MapFsTreeViewComponent } from './components/map-fs-tree-view/map-fs-tree-view.component';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { FolderSelectorComponent } from './components/dialogs/folder-selector/fo
 		EntitiesComponent,
 		TileSelectorComponent,
 		FolderSelectorComponent,
+		MapFsTreeViewComponent,
 	],
 	imports: [
 		RouterModule.forRoot(routes),
