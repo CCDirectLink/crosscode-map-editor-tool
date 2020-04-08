@@ -1,7 +1,6 @@
-import {Component, ViewChild} from '@angular/core';
-import {MatSidenav} from '@angular/material/sidenav';
-import {AddEntityMenuService} from './add-entity-menu.service';
-import {LoadMapComponent} from '../load-map/load-map.component';
+import { Component, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
+import { AddEntityMenuService } from './add-entity-menu.service';
 
 @Component({
 	selector: 'app-editor',
@@ -9,16 +8,15 @@ import {LoadMapComponent} from '../load-map/load-map.component';
 	styleUrls: ['./editor.component.scss']
 })
 export class EditorComponent {
-	@ViewChild('loadmap', {static: true})
-	loadmap!: LoadMapComponent;
-	
-	@ViewChild('sidenavLoadMap', {static: true})
+	@ViewChild('loadmap', { static: true })
+
+	@ViewChild('sidenavLoadMap', { static: true })
 	sidenavLoadMap!: MatSidenav;
-	
+
 	constructor(addEntity: AddEntityMenuService) {
 		addEntity.init();
 	}
-	
+
 	loadMapClicked() {
 		this.sidenavLoadMap.toggle();
 	}
