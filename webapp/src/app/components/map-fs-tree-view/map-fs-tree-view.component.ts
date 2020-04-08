@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import { FileTreeNode } from './treeNode.model';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MapFolder, MapFile } from '../../shared/map-filesystem/map-filesystem.model';
+import { MapLoaderService } from '../../shared/map-loader.service';
+import { CrossCodeMap } from '../../models/cross-code-map';
 
 
 @Component({
@@ -22,7 +24,8 @@ export class MapFsTreeViewComponent implements OnInit, OnDestroy {
 
     dataSource = new MatTreeNestedDataSource<FileTreeNode>();
 
-    constructor(private mapFsService: MapFileSystemService) { }
+    constructor(private mapFsService: MapFileSystemService,
+        private mapLoaderService: MapLoaderService) { }
 
     ngOnInit() {
         this.dataSource.data = [];
@@ -38,8 +41,16 @@ export class MapFsTreeViewComponent implements OnInit, OnDestroy {
         );
     }
 
-    onClick(file: MapFile) {
-        console.log(file);
+    onClick(file: FileTreeNode) {
+        this.mapFsService.loadMap(file.original).subscribe(
+            (map: CrossCodeMap) => {
+                map.file = file.original;
+                this.mapLoaderService.loadRawMap(map);
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        )
     }
 
     private initFolders(rootFolder: MapFolder) {

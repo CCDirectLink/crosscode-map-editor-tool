@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { IMapFile, MapFile, MapFolder, MapFileType } from './map-filesystem.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, ObservableLike } from 'rxjs';
 import { ToolCommunicationAPIService } from '../../services/tool-communication-api.service';
 import { ObservableHelper } from '../observable-helper';
 import { MapContext } from '../../models/mapContext.model';
@@ -94,13 +94,19 @@ export class MapFileSystemService {
 	}
 
 
+	loadMap(file: MapFile): Observable<any> {
+		if (file instanceof MapFolder) {
+			return throwError(`${file.name} is a folder.`);
+		}
+		return ObservableHelper.toObservable(this.toolApi.loadJSON(file.absolutePath));
+	}
 
 	/**
 	 * 
 	 * @param {string} path (virtual) to target map file 
 	 * @param {string} data to save to map file
 	 */
-	saveData(path: string, data: string): Observable<any> {
+	saveMap(path: string, data: string): Observable<any> {
 		let file = null;
 		let error = '';
 

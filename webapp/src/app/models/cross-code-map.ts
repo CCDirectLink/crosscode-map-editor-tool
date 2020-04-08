@@ -1,3 +1,5 @@
+import { MapFile } from "../shared/map-filesystem/map-filesystem.model";
+
 export interface CrossCodeMap {
 	name: string;
 	levels: { height: number }[];
@@ -8,9 +10,8 @@ export interface CrossCodeMap {
 	layer: MapLayer[];
 	attributes: Attributes;
 	screen: Point;
-	
-	filename?: string;
-	path?: string;
+
+	file?: MapFile;
 }
 
 export interface Point {

@@ -5,6 +5,7 @@ import { CrossCodeMap } from '../models/cross-code-map';
 import { CCMap } from './phaser/tilemap/cc-map';
 import { CCMapLayer } from './phaser/tilemap/cc-map-layer';
 import { ToolCommunicationAPIService } from '../services/tool-communication-api.service';
+import { MapFile } from './map-filesystem/map-filesystem.model';
 
 @Injectable()
 export class MapLoaderService {
@@ -31,7 +32,7 @@ export class MapLoaderService {
 		reader.onload = (e: any) => {
 			try {
 				const map: any = JSON.parse(e.target.result);
-				this.loadRawMap(map, file.name, undefined);
+				this.loadRawMap(map);
 			} catch (e) {
 				console.error(e);
 				this.snackBar.open('Error: ' + e.message, undefined, {
@@ -44,20 +45,11 @@ export class MapLoaderService {
 		reader.readAsText(file);
 	}
 
-	loadRawMap(map: CrossCodeMap, name?: string, path?: string) {
+	loadRawMap(map: CrossCodeMap) {
 		if (!map.mapHeight) {
 			throw new Error('Invalid map');
 		}
-		map.filename = name;
-		map.path = path;
 		this._map.next(map);
-	}
-
-	loadMapByPath(path: string) {
-		this.toolApi.loadJSON(path).subscribe((map: CrossCodeMap) => {
-			map.path = path;
-			this._map.next(map);
-		});
 	}
 
 	get map(): Observable<CrossCodeMap> {
