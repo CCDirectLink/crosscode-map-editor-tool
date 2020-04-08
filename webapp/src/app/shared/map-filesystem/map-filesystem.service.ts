@@ -100,13 +100,20 @@ export class MapFileSystemService {
 	 * @param {string} data to save to map file
 	 */
 	saveData(path: string, data: string): Observable<any> {
-		const file = this.resolveFilePath(path);
+		let file = null;
+		let error = '';
 
-		if (!file) {
-			return throwError(`No such virtual path "${path}"`);
+		try {
+			file = this.resolveFilePath(path);
+		} catch (e) {
+			error = e;
 		}
 
-		return ObservableHelper.toObservable(this.toolApi.save(file.absolutePath, data));
+		if (file) {
+			return ObservableHelper.toObservable(this.toolApi.save(file.absolutePath, data));
+		} else {
+			return throwError(error);
+		}
 	}
 
 
@@ -116,10 +123,16 @@ export class MapFileSystemService {
 	 * @param {IMapFile} folder info to add
 	 */
 	addFolder(path: string, folder: IMapFile): Observable<any> {
-		let rootFolder: MapFolder | null = this.resolveFolderPath(path);
+		let rootFolder: MapFolder | null = null;
+		let error = '';
+		try {
+			rootFolder = this.resolveFolderPath(path);
+		} catch (e) {
+			error = e;
+		}
 
 		if (!rootFolder) {
-			return throwError(`virtual path "${path}" doesn't exist.`);
+			return throwError(error);
 		}
 
 		const foundFolder = rootFolder.findChildByName(folder.name);
@@ -153,12 +166,17 @@ export class MapFileSystemService {
 	 * @param {IMapFile} file info to add
 	 */
 	addFile(path: string, file: IMapFile): Observable<any> {
-		const rootFolder = this.resolveFolderPath(path);
-
-		if (!rootFolder) {
-			return throwError(`virtual path "${path}" doesn't exist`);
+		let rootFolder: MapFolder | null = null;
+		let error = '';
+		try {
+			rootFolder = this.resolveFolderPath(path);
+		} catch (e) {
+			error = e;
 		}
 
+		if (!rootFolder) {
+			return throwError(error);
+		}
 
 		const foundFile = rootFolder.findChildByName(file.path);
 
@@ -191,7 +209,7 @@ export class MapFileSystemService {
 	 * @param {string} path (virtual) to target folder
 	 * @returns {MapFolder| null}
 	 */
-	private resolveFolderPath(path: string) {
+	private resolveFolderPath(path: string): MapFolder {
 		let root: MapFolder = this.root;
 
 		if (path.length) {
@@ -199,8 +217,10 @@ export class MapFileSystemService {
 			for (let i = 0; i < fileNames.length; ++i) {
 				const child: MapFile | MapFolder | null = root.findChildByName(fileNames[i]);
 
-				if (!(child instanceof MapFolder)) {
-					return null;
+				if (!child) {
+					throw `${fileNames.slice(0, i + 1).join('/')} does not exist.`;
+				} else if (!(child instanceof MapFolder)) {
+					throw `${fileNames.slice(0, i).concat(child.name).join('/')} is a MapFile.`;
 				} else {
 					root = child;
 				}
@@ -216,12 +236,10 @@ export class MapFileSystemService {
 	 */
 	private resolveFilePath(path: string) {
 		const pathParts = path.split('/');
-		let rootFolder: MapFolder | null = this.resolveFolderPath(pathParts.slice(0, -1).join('/'));
-		if (rootFolder) {
-			let fileName = pathParts[pathParts.length - 1];
-			return rootFolder.findChildByName(fileName);
-		}
-		return null;
+		let rootFolder: MapFolder = this.resolveFolderPath(pathParts.slice(0, -1).join('/'));
+
+		let fileName = pathParts[pathParts.length - 1];
+		return rootFolder.findChildByName(fileName);
 	}
 
 	get fs(): Observable<MapFolder> {
