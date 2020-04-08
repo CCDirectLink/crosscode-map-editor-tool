@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {CrossCodeMap} from '../../../models/cross-code-map';
-import {OverlayRefControl} from '../../../shared/overlay/overlay-ref-control';
-import {MapLoaderService} from '../../../shared/map-loader.service';
+import { Component, OnInit } from '@angular/core';
+import { CrossCodeMap } from '../../../models/cross-code-map';
+import { OverlayRefControl } from '../../../shared/overlay/overlay-ref-control';
+import { MapLoaderService } from '../../../shared/map-loader.service';
 
 @Component({
 	selector: 'app-new-map',
@@ -10,18 +10,18 @@ import {MapLoaderService} from '../../../shared/map-loader.service';
 })
 export class NewMapComponent implements OnInit {
 	map: CrossCodeMap;
-	
+
 	constructor(private mapLoader: MapLoaderService, public ref: OverlayRefControl) {
 		this.map = this.createDefaultMap();
 	}
-	
+
 	ngOnInit() {
 	}
-	
+
 	onSettingsChange(obj: { property: keyof CrossCodeMap, value: any }) {
 		(this.map[obj.property] as any) = obj.value;
 	}
-	
+
 	createDefaultMap(): CrossCodeMap {
 		return {
 			mapWidth: 1,
@@ -46,14 +46,13 @@ export class NewMapComponent implements OnInit {
 			screen: {
 				x: 0,
 				y: 0
-			},
-			filename: 'newMap'
+			}
 		};
 	}
-	
+
 	close() {
-		this.mapLoader.loadRawMap(this.map, this.map.name);
+		this.mapLoader.loadRawMap(this.map);
 		this.ref.close();
 	}
-	
+
 }
