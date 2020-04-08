@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
-import {CCMap} from '../shared/phaser/tilemap/cc-map';
-import {MatSnackBar} from '@angular/material';
-import {Helper} from '../shared/phaser/helper';
-import {EventManager} from '@angular/platform-browser';
-import {MapLoaderService} from '../shared/map-loader.service';
+import { Injectable } from '@angular/core';
+import { CCMap } from '../shared/phaser/tilemap/cc-map';
+import { MatSnackBar } from '@angular/material';
+import { Helper } from '../shared/phaser/helper';
+import { EventManager } from '@angular/platform-browser';
+import { MapLoaderService } from '../shared/map-loader.service';
 import { ToolCommunicationAPIService } from './tool-communication-api.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class SaveService {
-	
+
 	constructor(
 		private snackbar: MatSnackBar,
 		mapLoader: MapLoaderService,
@@ -21,7 +21,7 @@ export class SaveService {
 			if (Helper.isInputFocused()) {
 				return;
 			}
-			
+
 			if (event.ctrlKey && event.key.toLowerCase() === 's') {
 				event.preventDefault();
 				const map = mapLoader.tileMap.getValue();
@@ -36,20 +36,13 @@ export class SaveService {
 			}
 		});
 	}
-	
-	saveMap(map: CCMap) {
-		if (!map.path) {
+
+	saveMap(ccMap: CCMap) {
+		const { map, path } = ccMap.exportMap();
+		if (!path) {
 			console.error('map has no path :/');
 			return;
 		}
-
-		this.toolsApi.save(map.path, this.generateMapJson(map));
-	}
-
-	private generateMapJson(map: CCMap) {
-		const out = map.exportMap();
-		out.path = undefined;
-		out.filename = undefined;
-		return JSON.stringify(out);
+		this.toolsApi.save(path, JSON.stringify(map));
 	}
 }
