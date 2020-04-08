@@ -195,8 +195,10 @@ export class MapFileSystemService {
 
 		newFileObservable.subscribe(
 			() => {
-				rootFolder.addChildFile(file);
-				this._fs.next(this.root);
+				if (rootFolder) {
+					rootFolder.addChildFile(file);
+					this._fs.next(this.root);
+				}
 			}
 		);
 
