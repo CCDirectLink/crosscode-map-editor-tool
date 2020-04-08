@@ -13,7 +13,7 @@ export class ToolCommunicationAPIService {
     this.devModLoader = window.DevModLoader;
   }
 
-  getMaps(): Observable<MapContext[]> {
+  getMaps() {
     return this.devModLoader.getAllMaps();
   }
 

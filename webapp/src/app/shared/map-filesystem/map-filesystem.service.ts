@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable, throwError } from 'rxjs';
 import { ToolCommunicationAPIService } from '../../services/tool-communication-api.service';
 import { ObservableHelper } from '../observable-helper';
+import { MapContext } from '../../models/mapContext.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,7 +22,7 @@ export class MapFileSystemService {
 	}
 
 	refresh() {
-		const sub = this.toolApi.getMaps().subscribe(
+		ObservableHelper.toObservable<MapContext[]>(this.toolApi.getMaps()).subscribe(
 			(maps) => {
 				this.init(maps);
 				this._fs.next(this.root);
