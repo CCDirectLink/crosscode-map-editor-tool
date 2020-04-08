@@ -65,7 +65,7 @@ export class MapFileSystemService {
 								value: subParent.addChildFolder({
 									type: MapFileType.FOLDER,
 									name: pathPart,
-									path: pathPart
+									path: pathPart + '/'
 								}),
 								children: {}
 							};
