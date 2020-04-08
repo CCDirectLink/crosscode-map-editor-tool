@@ -81,9 +81,16 @@ export class MapFolder extends MapFile {
         for (let i = 0; i < this._children.length; ++i) {
             const child = this._children[i];
 
-            if (child.name === name) {
-                return child;
+            if (child instanceof MapFolder) {
+                if (child.name === name) {
+                    return child;
+                }
+            } else {
+                if (child.path === name) {
+                    return child;
+                }
             }
+
         }
         return null;
     }
