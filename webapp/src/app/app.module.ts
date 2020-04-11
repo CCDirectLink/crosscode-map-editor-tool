@@ -23,7 +23,6 @@ import { EditorComponent } from './components/editor/editor.component';
 import { TileSelectorComponent } from './components/tile-selector/tile-selector.component';
 import { RouterModule } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { FolderSelectorComponent } from './components/dialogs/folder-selector/folder-selector.component';
 import { MapFsTreeViewComponent } from './components/map-fs-tree-view/map-fs-tree-view.component';
 
 
@@ -37,7 +36,6 @@ import { MapFsTreeViewComponent } from './components/map-fs-tree-view/map-fs-tre
 		LayersComponent,
 		EntitiesComponent,
 		TileSelectorComponent,
-		FolderSelectorComponent,
 		MapFsTreeViewComponent,
 	],
 	imports: [
