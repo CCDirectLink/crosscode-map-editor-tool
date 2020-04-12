@@ -1,11 +1,11 @@
-import {CCMap} from '../tilemap/cc-map';
-import {MapEntity, Point, Point3} from '../../../models/cross-code-map';
-import {Helper} from '../helper';
+import { CCMap } from '../tilemap/cc-map';
+import { MapEntity, Point, Point3 } from '../../../models/cross-code-map';
+import { Helper } from '../helper';
 import * as Phaser from 'phaser';
-import {Vec2} from '../vec2';
+import { Vec2 } from '../vec2';
 
-import {Globals} from '../../globals';
-import {BaseObject} from '../base-object';
+import { Globals } from '../../globals';
+import { BaseObject } from '../base-object';
 
 export interface ScaleSettings {
 	scalableX: boolean;
@@ -25,32 +25,32 @@ export interface AttributeValue {
 	withNull?: boolean;
 	large?: boolean;
 	optional?: boolean;
-	
+
 	// TODO: not needed anymore, cc source is not obfuscated
 	[key: string]: any;
 }
 
 export abstract class CCEntity extends BaseObject {
-	
+
 	private map: CCMap;
 	private levelOffset = 0;
-	
+
 	public container!: Phaser.GameObjects.Container;
-	
+
 	private text?: Phaser.GameObjects.Text;
 	private images: Phaser.GameObjects.Image[] = [];
-	
-	
+
+
 	// input (is handled mostly by entity manager)
 	private collisionImage!: Phaser.GameObjects.Graphics;
 	private inputZone!: Phaser.GameObjects.Zone;
-	
+
 	private selected = false;
-	
+
 	// drag
 	public isDragged = false;
-	public startOffset: Point = {x: 0, y: 0};
-	
+	public startOffset: Point = { x: 0, y: 0 };
+
 	// zIndex: number;
 	details: { level: { level: number, offset: number }, type: string, settings: any } = <any>{};
 	entitySettings: {
@@ -84,7 +84,7 @@ export abstract class CCEntity extends BaseObject {
 		scalableStep: number;
 		pivot: Point;
 	} = <any>{};
-	
+
 	protected constructor(scene: Phaser.Scene, map: CCMap, x: number, y: number, typeName: string) {
 		super(scene, typeName, false);
 		scene.add.existing(this);
@@ -95,57 +95,57 @@ export abstract class CCEntity extends BaseObject {
 			type: typeName
 		};
 	}
-	
-	
+
+
 	protected init(): void {
 		this.container = this.scene.add.container(0, 0);
-		
+
 		const collImg = this.scene.add.graphics();
 		this.container.add(collImg);
 		this.collisionImage = collImg;
-		
+
 		collImg.alpha = 0;
-		
+
 		this.inputZone = this.scene.add.zone(0, 0, 50, 50);
 		this.inputZone.setOrigin(0);
 		this.inputZone.setData('entity', this);
 		this.container.add(this.inputZone);
-		
-		
+
+
 		this.inputZone.on('pointerover', () => this.inputOver());
 		this.inputZone.on('pointerout', () => this.inputOut());
 	}
-	
-	
+
+
 	public inputOver() {
 		if (!this.selected) {
 			this.collisionImage.alpha = 0.35;
 		}
 	}
-	
+
 	public inputOut() {
 		if (!this.selected) {
 			this.collisionImage.alpha = 0;
 		}
 	}
-	
+
 	protected activate(): void {
 		this.inputZone.setInteractive();
 	}
-	
-	
+
+
 	protected deactivate(): void {
 		this.inputZone.disableInteractive();
 	}
-	
-	
+
+
 	preUpdate(time: number, delta: number): void {
 		if (this.isDragged) {
 			const container = this.container;
 			const p = this.scene.input.activePointer;
 			container.x = Math.round(p.worldX - this.startOffset.x);
 			container.y = Math.round(p.worldY - this.startOffset.y);
-			
+
 			const settings = Globals.entitySettings;
 			if (settings.enableGrid) {
 				const diffX = container.x % settings.gridSize;
@@ -154,7 +154,7 @@ export abstract class CCEntity extends BaseObject {
 				} else {
 					container.x += settings.gridSize - diffX;
 				}
-				
+
 				const diffY = container.y % settings.gridSize;
 				if (diffY * 2 < settings.gridSize) {
 					container.y -= diffY;
@@ -165,21 +165,21 @@ export abstract class CCEntity extends BaseObject {
 			this.updateZIndex();
 		}
 	}
-	
+
 	updateSettings() {
 		const s = this.entitySettings;
 		const settings = this.details.settings;
-		
+
 		this.images.forEach(img => this.container.remove(img, true));
 		this.images = [];
-		
+
 		// bound box offset
-		const boundBoxOffset = {x: 0, y: 0};
+		const boundBoxOffset = { x: 0, y: 0 };
 		if (s.baseSize) {
 			boundBoxOffset.x = s.baseSize.x / 2;
 			boundBoxOffset.y = s.baseSize.y;
 		}
-		
+
 		// setup sprite
 		if (s.sheets && s.sheets.fix) {
 			for (const fix of s.sheets.fix) {
@@ -192,30 +192,30 @@ export abstract class CCEntity extends BaseObject {
 				const fix = s.sheets.fix[0];
 				const width = settings.size.x;
 				const height = (fix.renderHeight || s.baseSize.z) + settings.size.y;
-				
+
 				for (let x = 0; x < width; x += fix.w) {
 					const imgWidth = Math.min(fix.w, width - x);
 					for (let y = 0; y < height; y += fix.h) {
 						const imgHeight = Math.min(fix.h, height - y);
 						const img = this.scene.add.image(x, -y + settings.size.y, fix.gfx);
 						img.setCrop(fix.x, fix.y, imgWidth, imgHeight);
-						
+
 						img.setOrigin(0, 0);
-						
+
 						// level offset
 						img.y += this.levelOffset;
-						
+
 						// origin offset x=0, y=1
 						img.y -= imgHeight;
-						
+
 						// crop offset
 						img.x -= fix.x;
 						img.y -= fix.y;
-						
+
 						if (fix.renderMode === 'lighter') {
 							img.blendMode = Phaser.BlendModes.ADD;
 						}
-						
+
 						this.container.add(img);
 						this.images.push(img);
 					}
@@ -227,59 +227,59 @@ export abstract class CCEntity extends BaseObject {
 					sheet.y = sheet.y || 0;
 					sheet.offsetX = sheet.offsetX || 0;
 					sheet.offsetY = sheet.offsetY || 0;
-					
+
 					const img = this.scene.add.image(sheet.offsetX, sheet.offsetY, sheet.gfx);
 					img.setOrigin(0, 0);
-					
+
 					if (sheet.tint !== undefined) {
 						img.setTintFill(sheet.tint);
 					}
-					
+
 					img.alpha = sheet.alpha || 1;
-					
+
 					// scale, used for single color
 					img.scaleX = sheet.scaleX || 1;
 					img.scaleY = sheet.scaleY || 1;
-					
+
 					// level offset
 					img.y += this.levelOffset;
-					
+
 					// origin offset x=0.5, y=1
 					img.x -= sheet.w / 2;
 					img.y -= sheet.h;
-					
+
 					// bounding box offset
 					img.x += boundBoxOffset.x;
 					img.y += boundBoxOffset.y;
-					
+
 					// flip crop offset
 					let cropX = sheet.x;
 					if (sheet.flipX) {
 						cropX = img.displayWidth - sheet.x - sheet.w;
 					}
-					
+
 					let cropY = sheet.y;
 					if (sheet.flipY) {
 						// TODO: untested
 						cropY = img.displayWidth - sheet.y - sheet.h;
 					}
-					
+
 					// crop offset
 					img.x -= cropX;
 					img.y -= cropY;
-					
+
 					img.setCrop(cropX, cropY, sheet.w, sheet.h);
 					img.flipX = !!sheet.flipX;
 					img.flipY = !!sheet.flipY;
-					
+
 					if (sheet.renderMode === 'lighter') {
 						img.blendMode = Phaser.BlendModes.ADD;
 					}
-					
+
 					this.container.add(img);
 					this.images.push(img);
 				});
-				
+
 				if (s.sheets.offset) {
 					this.images.forEach(img => Vec2.add(img, s.sheets.offset!));
 				}
@@ -287,7 +287,7 @@ export abstract class CCEntity extends BaseObject {
 					this.images.forEach(img => img.flipX = !img.flipX);
 				}
 			}
-			
+
 			if (s.sheets.renderMode === 'lighter') {
 				this.images.forEach(img => img.blendMode = Phaser.BlendModes.ADD);
 			} else if (s.sheets.renderMode === 'source-over') {
@@ -295,18 +295,18 @@ export abstract class CCEntity extends BaseObject {
 				console.warn('renderMode source-over found');
 			}
 		}
-		
+
 		this.container.bringToTop(this.collisionImage);
 		if (this.text) {
 			this.container.bringToTop(this.text);
 		}
-		
+
 		this.drawBoundingBox();
 	}
-	
+
 	set level(level: any) {
 		const details = this.details;
-		
+
 		if (typeof level === 'object') {
 			details.level = level;
 		} else {
@@ -315,10 +315,10 @@ export abstract class CCEntity extends BaseObject {
 				offset: 0
 			};
 		}
-		
+
 		this.updateLevel();
 	}
-	
+
 	updateLevel() {
 		this.updateZIndex();
 		const level = this.map.levels[this.details.level.level];
@@ -330,13 +330,17 @@ export abstract class CCEntity extends BaseObject {
 		this.levelOffset = -(height + offset);
 		this.updateSettings();
 	}
-	
+
 	// TODO: refactor
 	async setSettings(settings: any) {
+		if (!settings) {
+			settings = {};
+		}
+
 		this.details.settings = settings;
 		await this.updateType();
 	}
-	
+
 	setSelected(selected: boolean) {
 		this.selected = selected;
 		if (this.collisionImage) {
@@ -346,7 +350,7 @@ export abstract class CCEntity extends BaseObject {
 			this.isDragged = false;
 		}
 	}
-	
+
 	destroy() {
 		super.destroy();
 		this.container.destroy();
@@ -354,21 +358,21 @@ export abstract class CCEntity extends BaseObject {
 			this.text.destroy();
 		}
 	}
-	
+
 	updateZIndex() {
 		let zIndex = this.details.level.level * 10 + 1;
-		
+
 		// TODO: hack to display OLPlatform over objects because right now Object Layer is always on level 10
 		if (this.details.type === 'OLPlatform' || this.details.type === 'ObjectLayerView') {
 			zIndex += 100;
 		}
-		
+
 		// sort entities by y when on same level
 		zIndex += this.container.y * 0.000001;
-		
+
 		this.container.depth = zIndex;
 	}
-	
+
 	exportEntity(): MapEntity {
 		const out = {
 			type: this.details.type,
@@ -379,29 +383,30 @@ export abstract class CCEntity extends BaseObject {
 		};
 		return JSON.parse(JSON.stringify(out));
 	}
-	
+
 	public abstract getScaleSettings(): ScaleSettings | undefined;
-	
+
 	public abstract getAttributes(): EntityAttributes;
-	
+
 	protected async abstract setupType(settings: any): Promise<void>;
-	
+
 	public async updateType() {
 		const settings = this.details.settings;
+
 		await this.setupType(settings);
 		this.setActive(true);
 	}
-	
+
 	public generateErrorImage() {
 		this.generateNoImageType(0xFF0000, 1);
 	}
-	
+
 	public generateNoImageType(rgbTop = 0xc06040, aTop = 0.5, rgb = 0x800000, a = 0.5) {
 		const settings = this.details.settings;
-		
-		const baseSize = settings.size || {x: 16, y: 16};
+
+		const baseSize = settings.size || { x: 16, y: 16 };
 		baseSize.z = settings.zHeight || settings.wallZHeight || 0;
-		
+
 		this.entitySettings = <any>{};
 		this.entitySettings.baseSize = baseSize;
 		const scaleSettings = this.getScaleSettings();
@@ -409,22 +414,22 @@ export abstract class CCEntity extends BaseObject {
 			this.entitySettings.scalableX = scaleSettings.scalableX;
 			this.entitySettings.scalableY = scaleSettings.scalableY;
 		}
-		
-		
+
+
 		this.generateSingleColorSheet(rgb, a, rgbTop, aTop);
 		this.updateSettings();
 	}
-	
+
 	private generateSingleColorSheet(rgb: number, a: number, rgbTop?: number, aTop?: number) {
 		const size = this.getActualSize();
-		
+
 		if (rgbTop === undefined) {
 			rgbTop = rgb;
 		}
 		if (aTop === undefined) {
 			aTop = a;
 		}
-		
+
 		if (!size.z) {
 			this.entitySettings.sheets = {
 				ignoreScalable: true,
@@ -468,7 +473,7 @@ export abstract class CCEntity extends BaseObject {
 			};
 		}
 	}
-	
+
 	protected replaceJsonParams(jsonInstance: any, prop: any) {
 		Object.entries(jsonInstance).forEach(([key, value]: [string, any]) => {
 			if (value['jsonPARAM']) {
@@ -480,7 +485,7 @@ export abstract class CCEntity extends BaseObject {
 			}
 		});
 	}
-	
+
 	public getBoundingBox(): Phaser.Geom.Rectangle {
 		if (!this.inputZone.input) {
 			console.warn('no bounding box for: ' + this.details.type);
@@ -495,7 +500,7 @@ export abstract class CCEntity extends BaseObject {
 		);
 		return box;
 	}
-	
+
 	private getActualSize() {
 		const s = this.entitySettings;
 		const size = Object.assign({}, this.details.settings.size || s.baseSize);
@@ -507,49 +512,49 @@ export abstract class CCEntity extends BaseObject {
 			console.log(this);
 			console.error(e);
 		}
-		
+
 		return size;
 	}
-	
+
 	private drawBoundingBox() {
 		const collImg = this.collisionImage;
-		
+
 		collImg.clear();
-		
+
 		const size = this.getActualSize();
-		
+
 		const inputArea = new Phaser.Geom.Rectangle(0, 0, size.x, size.y);
-		
+
 		const outline = 0;
 		const outlineAlpha = 1;
-		
+
 		const bottomRect = new Phaser.Geom.Rectangle(0, size.z, inputArea.width, inputArea.height - 1);
-		
+
 		// show middle and top part only if entity is not flat
 		if (size.z > 0) {
 			const middleRect = new Phaser.Geom.Rectangle(0, inputArea.height, inputArea.width, size.z - 1);
 			Helper.drawRect(collImg, middleRect, 0xff0707, 0.5, outline, outlineAlpha);
-			
+
 			const topRect = new Phaser.Geom.Rectangle(0, 0, inputArea.width, inputArea.height);
 			Helper.drawRect(collImg, topRect, 0xffff07, 1, outline, outlineAlpha);
-			
+
 			Helper.drawRect(collImg, bottomRect, 0xffff07, 0.1, outline, outlineAlpha);
 		} else {
 			Helper.drawRect(collImg, bottomRect, 0xffff07, 1, outline, outlineAlpha);
 		}
-		
+
 		collImg.x = inputArea.x;
 		collImg.y = inputArea.y - (size.z || 0) + this.levelOffset;
-		
+
 		const shape = new Phaser.Geom.Rectangle(0, 0, size.x, size.y + (size.z || 0));
-		
+
 		this.inputZone.x = collImg.x;
 		this.inputZone.y = collImg.y;
 		this.inputZone.setSize(shape.width, shape.height, true);
-		
+
 		this.generateText(this.details.settings.name, size);
 	}
-	
+
 	private generateText(name: string, size: Point) {
 		if (name) {
 			if (!this.text) {
@@ -567,6 +572,6 @@ export abstract class CCEntity extends BaseObject {
 			this.text.destroy();
 			this.text = undefined;
 		}
-		
+
 	}
 }
