@@ -6,8 +6,12 @@ $config: mat-typography-config();
 .mapTree li {
 	margin-top: 0;
 	margin-bottom: 0;
-	padding-left: 8px;
+	padding-left: 4px;
 	list-style-type: none;
+}
+
+.mapTree li .mapTree-file {
+	border-left: 1px solid white;
 }
 
 .mapTree-button {

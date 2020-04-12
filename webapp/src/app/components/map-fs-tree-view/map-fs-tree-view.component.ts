@@ -16,8 +16,7 @@ import { CrossCodeMap } from '../../models/cross-code-map';
     styleUrls: ['./map-fs-tree-view.component.scss']
 })
 export class MapFsTreeViewComponent implements OnInit, OnDestroy {
-    @Input()
-    sidenav!: MatSidenav;
+    @Input() sidenav!: MatSidenav;
     private fsSubcription!: Subscription;
 
     treeControl = new NestedTreeControl<FileTreeNode>(node => node.children);
