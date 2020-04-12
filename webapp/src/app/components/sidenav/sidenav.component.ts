@@ -50,6 +50,10 @@ export class SidenavComponent implements OnInit {
 	}
 
 	tabChanged(event: MatTabChangeEvent) {
-		this.globalEvents.currentView.next(event.index === 0 ? EditorView.Layers : EditorView.Entities);
+		const newView = [
+			EditorView.Layers,
+			EditorView.Entities
+		][event.index];
+		this.globalEvents.currentView.next(newView);
 	}
 }
