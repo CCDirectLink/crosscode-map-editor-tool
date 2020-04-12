@@ -33,6 +33,9 @@ export class SidenavComponent implements OnInit {
 		});
 		this.mapLoader.tileMap.subscribe(tilemap => {
 			this.tilemap = tilemap;
+
+			const currentView = this.globalEvents.currentView;
+			currentView.next(currentView.getValue());
 		});
 
 		this.globalEvents.currentView.subscribe(view => {
