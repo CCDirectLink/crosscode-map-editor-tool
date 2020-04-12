@@ -36,7 +36,7 @@ export class CCMap {
 			}
 			const selectedLayer = Globals.mapLoaderService.selectedLayer;
 			const i = this.layers.indexOf(<any>selectedLayer.getValue());
-			const map: CrossCodeMap = JSON.parse(container.state.json);
+			const { map, _ } = JSON.parse(container.state.json);
 			map.file = this.file;
 			await this.loadMap(map, true);
 			if (i >= 0 && this.layers.length > i) {
