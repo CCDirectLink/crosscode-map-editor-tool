@@ -19,7 +19,6 @@ export class SidenavComponent implements OnInit {
 	tilemap?: CCMap;
 	currentView?: EditorView;
 	editorViewEnum = EditorView;
-	private viewChangedAgain = false;
 	constructor(
 		private mapLoader: MapLoaderService,
 		private globalEvents: GlobalEventsService
@@ -34,9 +33,6 @@ export class SidenavComponent implements OnInit {
 		});
 		this.mapLoader.tileMap.subscribe(tilemap => {
 			this.tilemap = tilemap;
-			const currentView = this.globalEvents.currentView;
-
-			currentView.next(currentView.getValue());
 		});
 
 		this.globalEvents.currentView.subscribe(view => {
@@ -54,7 +50,6 @@ export class SidenavComponent implements OnInit {
 	}
 
 	tabChanged(event: MatTabChangeEvent) {
-		console.log(this.activeTab, event.index, this.viewChangedAgain);
 		this.globalEvents.currentView.next(event.index === 0 ? EditorView.Layers : EditorView.Entities);
 	}
 }
