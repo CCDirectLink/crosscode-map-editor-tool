@@ -15,10 +15,15 @@
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="mapTree">
             <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
                 <li class="mat-tree-node">
-                    <button mat-icon-button (click)="onClick(node)">
-                        {{node.name}}
-                    </button>
+                    <button mat-button class="mapTree-button" (click)="onClick(node)">
+                        <mat-icon class="mat-icon-rtl-mirror">
+                            launch
+                        </mat-icon>
+                        <span>
+                            {{node.name}}
+                        </span>
 
+                    </button>
                 </li>
             </mat-tree-node>
 
