@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MapFileSystemService } from '../../shared/map-filesystem/map-filesystem.service';
 import { Subscription } from 'rxjs';
 import { MapFolder, MapFile } from '../../shared/map-filesystem/map-filesystem.model';
@@ -6,6 +6,7 @@ import { MapFileSystemUtils } from '../../shared/map-filesystem/map-filesystem.u
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
+	encapsulation: ViewEncapsulation.None,
 	selector: 'app-save-as',
 	templateUrl: './save-as.component.html',
 	styleUrls: ['./save-as.component.scss']
@@ -36,6 +37,11 @@ export class SaveAsComponent implements OnInit, OnDestroy {
 		this.fsSubcription.unsubscribe();
 	}
 
+
+	isFolder(file: MapFile) {
+		return file instanceof MapFolder;
+	}
+
 	refresh() {
 		if (this.trueRootFolder) {
 			this.currentRootFolder = MapFileSystemUtils.resolveFolderPath(this.trueRootFolder, this.pathToRoot);
@@ -44,11 +50,7 @@ export class SaveAsComponent implements OnInit, OnDestroy {
 	}
 
 	onClick(file: MapFile) {
-		if (file instanceof MapFolder) {
 
-		} else {
-
-		}
 	}
 
 	onDoubleClick(file: MapFile) {

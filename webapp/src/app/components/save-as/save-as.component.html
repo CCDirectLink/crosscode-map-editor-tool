@@ -1,11 +1,24 @@
 <div *ngIf="currentRootFolder">
-    <h1 mat-dialog-title></h1>
+    <h1 mat-dialog-title>Save As</h1>
     <mat-dialog-content>
-        <ul *ngFor="let node of currentRootFolder.children">
-            <li>
-                <a (click)="onClick(node)" (dblclick)="onDoubleClick(node)">
-                    {{node.name}}
-                </a>
+        <ul>
+            <li *ngIf="currentRootFolder.parent">
+                <button mat-button (dblclick)="onDoubleClick(currentRootFolder.parent)">
+                    <mat-icon>folder</mat-icon>
+                    <span>
+                        ..
+                    </span>
+                </button>
+            </li>
+            <li *ngFor="let node of currentRootFolder.children">
+                <button mat-button (click)="onClick(node)" (dblclick)="onDoubleClick(node)">
+                    <mat-icon style="padding: 0px;">
+                        {{ isFolder(node) ? 'folder': ''}}
+                    </mat-icon>
+                    <span>
+                        {{node.name}}
+                    </span>
+                </button>
             </li>
         </ul>
     </mat-dialog-content>
