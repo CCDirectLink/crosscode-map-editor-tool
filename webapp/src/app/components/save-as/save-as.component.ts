@@ -43,11 +43,25 @@ export class SaveAsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	onClick(file: MapFile) {
+		if (file instanceof MapFolder) {
+
+		} else {
+
+		}
+	}
+
 	onDoubleClick(file: MapFile) {
 		if (file instanceof MapFolder) {
+			console.log('Go to folder', file.name);
 			this.currentRootFolder = file;
 		} else {
-			console.log('Clicked', file);
+			if (confirm(`The current map will be saved into an already existing map named ${file.name}.`)) {
+				console.log('User chose', file.name);
+				// this.closeDialog(file);
+			} else {
+				console.log('Clicked', file);
+			}
 		}
 
 	}
