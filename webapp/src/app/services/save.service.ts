@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CCMap } from '../shared/phaser/tilemap/cc-map';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { Helper } from '../shared/phaser/helper';
 import { EventManager } from '@angular/platform-browser';
 import { MapLoaderService } from '../shared/map-loader.service';
 import { ToolCommunicationAPIService } from './tool-communication-api.service';
+import { SaveAsComponent } from '../components/save-as/save-as.component';
+import { MapFile } from '../shared/map-filesystem/map-filesystem.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,6 +15,7 @@ export class SaveService {
 
 	constructor(
 		private snackbar: MatSnackBar,
+		private dialog: MatDialog,
 		mapLoader: MapLoaderService,
 		eventManager: EventManager,
 		private toolsApi: ToolCommunicationAPIService
@@ -29,7 +32,7 @@ export class SaveService {
 					return;
 				}
 				if (event.shiftKey) {
-					// this.saveMapAs(map);
+					this.saveMapAs(map);
 				} else {
 					this.saveMap(map);
 				}
@@ -37,12 +40,24 @@ export class SaveService {
 		});
 	}
 
+	saveMapAs(ccMap: CCMap) {
+		const ref = this.dialog.open(SaveAsComponent, {});
+
+		ref.afterClosed().subscribe((file: MapFile | undefined) => {
+			console.log('It closed', file);
+			if (file) {
+				ccMap.file = file;
+				this.saveMap(ccMap);
+			}
+		});
+	}
+
 	saveMap(ccMap: CCMap) {
-		const { map, path } = ccMap.exportMap();
-		if (!path) {
-			console.error('map has no path :/');
-			return;
+		if (!ccMap.file) {
+			return this.saveMapAs(ccMap);
 		}
+
+		const { map, path } = ccMap.exportMap();
 		this.toolsApi.save(path, JSON.stringify(map));
 	}
 }
