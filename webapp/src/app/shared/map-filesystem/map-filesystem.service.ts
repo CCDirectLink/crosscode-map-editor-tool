@@ -6,6 +6,7 @@ import { Observable, throwError, ObservableLike } from 'rxjs';
 import { ToolCommunicationAPIService } from '../../services/tool-communication-api.service';
 import { ObservableHelper } from '../observable-helper';
 import { MapContext } from '../../models/mapContext.model';
+import { MapFileSystemUtils } from './map-filesystem.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -115,7 +116,7 @@ export class MapFileSystemService {
 		let error = '';
 
 		try {
-			file = this.resolveFilePath(path);
+			file = MapFileSystemUtils.resolveFilePath(this.root, path);
 		} catch (e) {
 			error = e;
 		}
@@ -137,7 +138,7 @@ export class MapFileSystemService {
 		let rootFolder: MapFolder | null = null;
 		let error = '';
 		try {
-			rootFolder = this.resolveFolderPath(path);
+			rootFolder = MapFileSystemUtils.resolveFolderPath(this.root, path);
 		} catch (e) {
 			error = e;
 		}
@@ -180,7 +181,7 @@ export class MapFileSystemService {
 		let rootFolder: MapFolder | null = null;
 		let error = '';
 		try {
-			rootFolder = this.resolveFolderPath(path);
+			rootFolder = MapFileSystemUtils.resolveFolderPath(this.root, path);
 		} catch (e) {
 			error = e;
 		}
@@ -215,44 +216,6 @@ export class MapFileSystemService {
 
 		return newFileObservable;
 
-	}
-
-	/**
-	 * 
-	 * @param {string} path (virtual) to target folder
-	 * @returns {MapFolder| null}
-	 */
-	private resolveFolderPath(path: string): MapFolder {
-		let root: MapFolder = this.root;
-
-		if (path.length) {
-			const fileNames = path.split('/');
-			for (let i = 0; i < fileNames.length; ++i) {
-				const child: MapFile | MapFolder | null = root.findChildByName(fileNames[i]);
-
-				if (!child) {
-					throw `${fileNames.slice(0, i + 1).join('/')} does not exist.`;
-				} else if (!(child instanceof MapFolder)) {
-					throw `${fileNames.slice(0, i).concat(child.name).join('/')} is a MapFile.`;
-				} else {
-					root = child;
-				}
-			}
-		}
-		return root;
-	}
-
-	/**
-	 * 
-	 * @param {string} path (virtual) to target folder
-	 * @returns {MapFile | null}
-	 */
-	private resolveFilePath(path: string) {
-		const pathParts = path.split('/');
-		let rootFolder: MapFolder = this.resolveFolderPath(pathParts.slice(0, -1).join('/'));
-
-		let fileName = pathParts[pathParts.length - 1];
-		return rootFolder.findChildByName(fileName);
 	}
 
 	get fs(): Observable<MapFolder> {
