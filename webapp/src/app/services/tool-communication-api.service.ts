@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { MapContext } from '../models/mapContext.model';
-
 
 @Injectable({
   providedIn: 'root'
