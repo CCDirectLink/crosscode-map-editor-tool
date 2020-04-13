@@ -57,7 +57,7 @@ export class ToolbarComponent implements OnInit {
 		}
 
 		if (saveAs) {
-			// this.save.saveMapAs(this.map);
+			this.save.saveMapAs(this.map);
 		} else {
 			this.save.saveMap(this.map);
 		}
