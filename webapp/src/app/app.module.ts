@@ -24,6 +24,7 @@ import { TileSelectorComponent } from './components/tile-selector/tile-selector.
 import { RouterModule } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MapFsTreeViewComponent } from './components/map-fs-tree-view/map-fs-tree-view.component';
+import { SaveAsComponent } from './components/save-as/save-as.component';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { MapFsTreeViewComponent } from './components/map-fs-tree-view/map-fs-tre
 		EntitiesComponent,
 		TileSelectorComponent,
 		MapFsTreeViewComponent,
+		SaveAsComponent,
 	],
 	imports: [
 		RouterModule.forRoot(routes),
@@ -51,6 +53,9 @@ import { MapFsTreeViewComponent } from './components/map-fs-tree-view/map-fs-tre
 		SharedModule,
 		HistoryModule,
 		ScrollingModule,
+	],
+	entryComponents: [
+		SaveAsComponent,
 	],
 	providers: [
 		WidgetRegistryService,

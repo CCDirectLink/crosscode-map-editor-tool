@@ -1,0 +1,9 @@
+<div *ngIf="currentRootFolder">
+    <ul *ngFor="let node of currentRootFolder.children">
+        <li>
+            <a (dblclick)="onDoubleClick(node)">
+                {{node.name }}
+            </a>
+        </li>
+    </ul>
+</div>
