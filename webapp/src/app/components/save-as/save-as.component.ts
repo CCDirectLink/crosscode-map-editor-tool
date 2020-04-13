@@ -42,10 +42,18 @@ export class SaveAsComponent implements OnInit, OnDestroy {
 		return file instanceof MapFolder;
 	}
 
+	private createNewPath(file: MapFolder) {
+		const newFile = file.name;
+		if (file.relativePath) {
+			return file.relativePath + '/' + newFile;
+		}
+		return newFile;
+	}
+
 	refresh() {
 		if (this.trueRootFolder) {
 			this.currentRootFolder = MapFileSystemUtils.resolveFolderPath(this.trueRootFolder, this.pathToRoot);
-			this.pathToRoot = this.currentRootFolder.relativePath;
+			this.pathToRoot = this.createNewPath(this.currentRootFolder);
 		}
 	}
 
@@ -55,8 +63,8 @@ export class SaveAsComponent implements OnInit, OnDestroy {
 
 	onDoubleClick(file: MapFile) {
 		if (file instanceof MapFolder) {
-			console.log('Go to folder', file.name);
 			this.currentRootFolder = file;
+			this.pathToRoot = this.createNewPath(file);
 		} else {
 			if (confirm(`The current map will be saved into an already existing map named ${file.name}.`)) {
 				console.log('User chose', file.name);
