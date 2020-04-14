@@ -27,7 +27,7 @@ export class SaveService {
 
 			if (event.ctrlKey && event.key.toLowerCase() === 's') {
 				event.preventDefault();
-				const map = mapLoader.tileMap.getValue();
+				const map: any = mapLoader.tileMap.getValue() || ;
 				if (!map) {
 					return;
 				}
@@ -41,7 +41,10 @@ export class SaveService {
 	}
 
 	saveMapAs(ccMap: CCMap) {
-		const ref = this.dialog.open(SaveAsComponent, {});
+		const ref = this.dialog.open(SaveAsComponent, {
+			width: '80vw',
+			height: '70vh'
+		});
 
 		ref.afterClosed().subscribe((file: MapFile | undefined) => {
 			console.log('It closed', file);
