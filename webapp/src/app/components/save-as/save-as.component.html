@@ -1,17 +1,18 @@
-<div *ngIf="currentRootFolder">
-    <h1 mat-dialog-title>Save As</h1>
-    <mat-dialog-content>
+<div class="save-as-dialog-container" *ngIf="currentRootFolder">
+    <h1 class="save-as-dialog-header" mat-dialog-title>Save As</h1>
+    <mat-dialog-content class="save-as-dialog-content dark-scrollbar">
         <ul>
             <li *ngIf="currentRootFolder.parent">
-                <button mat-button (dblclick)="onDoubleClick(currentRootFolder.parent)">
+                <button class="save-file-button" mat-button (dblclick)="onDoubleClick(currentRootFolder.parent)">
                     <mat-icon>folder</mat-icon>
                     <span>
                         ..
                     </span>
                 </button>
             </li>
+
             <li *ngFor="let node of currentRootFolder.children">
-                <button mat-button (click)="onClick(node)" (dblclick)="onDoubleClick(node)">
+                <button class="save-file-button" mat-button (click)="onClick(node)" (dblclick)="onDoubleClick(node)">
                     <mat-icon style="padding: 0px;">
                         {{ isFolder(node) ? 'folder': ''}}
                     </mat-icon>
@@ -22,9 +23,14 @@
             </li>
         </ul>
     </mat-dialog-content>
-    <mat-dialog-actions>
-        <button mat-button mat-dialog-close>Select</button>
-        <button mat-button [mat-dialog-close]="undefined">Cancel</button>
-    </mat-dialog-actions>
 
+    <mat-dialog-actions class="save-as-dialog-action" fxLayoutAlign="end">
+        <div fxFlex="0 0 70%" fxFlegAlign="start">
+            <input matInput type="text" placeholder="Map Name" style="color: white; width:100%; height: 100%;" />
+        </div>
+        <div fxFlex="0 0 auto" fxFlexAlign="end">
+            <button mat-button mat-dialog-close>Select</button>
+            <button mat-button [mat-dialog-close]="undefined">Cancel</button>
+        </div>
+    </mat-dialog-actions>
 </div>

@@ -3,7 +3,29 @@ li {
     margin-left: 0px;
 }
 
-.mat-button {
+.save-file-button {
     text-align: left;
     width: 100%;
+}
+.save-as-dialog-header {
+    overflow: none;
+    min-height: 10%;
+    max-height: 10%;  
+}
+
+.save-as-dialog-content {
+    overflow: auto;
+    min-height: 80%;
+    max-height: 80%;
+}
+.save-as-dialog-action {
+    overflow: none;
+    min-height: 10%;
+    max-height: 10%;  
+}
+
+.save-as-dialog-container {
+    width: 100%;
+    overflow: none;
+    height: 100%;
 }
