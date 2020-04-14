@@ -43,7 +43,7 @@ $toolbarHeight: 54px;
 }
 
 .content {
-	height: 100%;
+	height: calc(100% - #{$toolbarHeight})
 }
 
 .scrollable-content {
