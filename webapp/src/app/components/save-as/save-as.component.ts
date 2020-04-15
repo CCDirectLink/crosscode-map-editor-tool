@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { MapFileSystemService } from '../../shared/map-filesystem/map-filesystem.service';
 import { Subscription } from 'rxjs';
-import { MapFolder, MapFile } from '../../shared/map-filesystem/map-filesystem.model';
+import { MapFolder, MapFile, IMapFile } from '../../shared/map-filesystem/map-filesystem.model';
 import { MapFileSystemUtils } from '../../shared/map-filesystem/map-filesystem.utils';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -12,6 +12,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 	styleUrls: ['./save-as.component.scss']
 })
 export class SaveAsComponent implements OnInit, OnDestroy {
+	testObject: MapFolder = new MapFolder({ name: 'root', path: 'root/' } as IMapFile, null);
+	testPath: string[] = [];
 	private fsSubcription!: Subscription;
 	private pathToRoot: string = '';
 	// true parent 
@@ -21,16 +23,26 @@ export class SaveAsComponent implements OnInit, OnDestroy {
 		public dialogRef: MatDialogRef<SaveAsComponent>,
 		private mapFsService: MapFileSystemService,
 		@Inject(MAT_DIALOG_DATA) public data: any) {
-
+		this.testObject.isRoot = true;
+		MapFileSystemUtils.generateFromMapTree(this.testObject, [{
+			name: 'mod1',
+			path: 'mod1/',
+			children: [
+				'test1/test2/test3/'
+			]
+		}]);
+		this.pathToRoot = 'mod1/test1';
 	}
 
 	ngOnInit() {
-		this.fsSubcription = this.mapFsService.fs.subscribe(
+		/*this.fsSubcription = this.mapFsService.fs.subscribe(
 			(rootFolder) => {
 				this.trueRootFolder = rootFolder;
 				this.refresh();
 			}
-		);
+		);*/
+		this.trueRootFolder = this.testObject;
+		this.refresh();
 	}
 
 	ngOnDestroy() {
