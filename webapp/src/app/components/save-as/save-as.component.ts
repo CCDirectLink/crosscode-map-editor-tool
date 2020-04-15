@@ -46,7 +46,9 @@ export class SaveAsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.fsSubcription.unsubscribe();
+		if (this.fsSubcription) {
+			this.fsSubcription.unsubscribe();
+		}
 	}
 
 
