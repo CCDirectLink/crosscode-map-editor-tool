@@ -93,11 +93,11 @@ export class CCMap {
 		await this.entityManager.initialize(map);
 
 		if (!skipInit) {
-			const { map } = this.exportMap();
+			const initState = this.exportMap();
 			Globals.stateHistoryService.init({
 				name: 'load',
 				icon: 'insert_drive_file',
-				json: JSON.stringify(map)
+				json: JSON.stringify(initState)
 			});
 		}
 
