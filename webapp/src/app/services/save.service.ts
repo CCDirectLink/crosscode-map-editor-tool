@@ -27,7 +27,7 @@ export class SaveService {
 
 			if (event.ctrlKey && event.key.toLowerCase() === 's') {
 				event.preventDefault();
-				const map: any = mapLoader.tileMap.getValue() || ;
+				const map: any = mapLoader.tileMap.getValue() || {};
 				if (!map) {
 					return;
 				}
