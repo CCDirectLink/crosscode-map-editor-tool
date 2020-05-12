@@ -15,15 +15,18 @@ export class ToolCommunicationAPIService {
   }
 
   loadJSON(jsonPath: string) {
-    return this.devModLoader.loadJSON(jsonPath);
+    const fullPath = this.devModLoader.relativeToFullPath(jsonPath);
+    return this.devModLoader.loadJSON(fullPath);
   }
 
   patchJSON(jsonData: any, url: string) {
     return this.devModLoader.loadJSON(jsonData, url);
   }
 
+
   getAssetsOverride(path: string) {
-    return this.devModLoader.getAssetPathOveride(path, false);
+    const overrideURL = this.devModLoader.getAssetPathOveride(path);
+    return this.devModLoader.relativeToFullPath(overrideURL);
   }
 
   makeFolder(path: string) {

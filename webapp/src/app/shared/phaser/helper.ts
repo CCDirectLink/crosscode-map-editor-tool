@@ -87,7 +87,7 @@ export class Helper {
 			return Helper.getJSONPatched(key, callback);
 		}
 
-		const jsonPath = Helper.loader.getAssetsOverride(key + '.json', true);
+		const jsonPath = Helper.loader.getAssetsOverride(key + '.json');
 
 		// load json
 		scene.load.json(key, jsonPath);
@@ -115,7 +115,7 @@ export class Helper {
 		if (scene.textures.exists(key)) {
 			return true;
 		}
-		const texturePath = Helper.loader.getAssetsOverride(key, true);
+		const texturePath = Helper.loader.getAssetsOverride(key);
 
 		console.log('Texture key', key);
 		return new Promise(res => {
