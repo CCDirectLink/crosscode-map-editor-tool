@@ -73,9 +73,9 @@ export class ToolbarComponent implements OnInit {
 	}
 
 	sendMapToCrossCode() {
-		const toolsApi = (window as any).ToolsApi;
+		const Tool = (window as any).Tool;
 		if (this.map) {
-			toolsApi.Communication.Api.emit('map', new toolsApi.Communication.Message('update', this.map.exportMap().map, null));
+			Tool.Communication.Topic.emit('map', new Tool.Communication.Message('update', this.map.exportMap().map, null));
 		}
 	}
 
